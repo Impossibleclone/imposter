@@ -3,6 +3,6 @@ Your Friendly Neighbourhood Programming Language.
 
 It's still in the Development phase no releases or installations are available yet.
 
-[!mascot](./mascot/pengi.jpeg)
+![mascot](./mascot/pengi.jpeg)
 
 - Lexing in Progress
