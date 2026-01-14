@@ -20,8 +20,8 @@ const (
 	PLUS   = "+"
 
 	//Delimiters
-	COMMA     = "COMMA"
-	SEMICOLON = "SEMICOLON"
+	COMMA     = ","
+	SEMICOLON = ";"
 
 	LPAREN = "("
 	RPAREN = ")"
@@ -32,3 +32,15 @@ const (
 	FUNCTION = "FUNCTION"
 	VAR      = "VAR"
 )
+
+var keywords = map[string]TokenType{
+	"fn":  FUNCTION,
+	"var": VAR,
+}
+
+func LookupIdent(ident string) TokenType {
+	if tok, ok := keywords[ident]; ok {
+		return tok
+	}
+	return IDENT
+}
