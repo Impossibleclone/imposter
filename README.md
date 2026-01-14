@@ -3,7 +3,7 @@ Your Friendly Neighbourhood Programming Language.
 
 It's still in the Development phase no releases or installations are available yet.
 
-Say hello!! to Pengi.
+Say hi! to Pengi.
 ![mascot](./mascot/pengi.jpeg)
 
 - Lexing in Progress
