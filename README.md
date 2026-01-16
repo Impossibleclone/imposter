@@ -12,5 +12,7 @@ Say hi! to Pengi.
 How to run:
 
 ```bash
-$ go run main.go
+$ git clone https://github.com/impossibleclone/imposter.git
+$ cd imposter
+$ go run ./cmd/imposter
 ```
