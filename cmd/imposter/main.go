@@ -2,8 +2,18 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/user"
+	"github.com/impossibleclone/imposter/internal/repl"
 )
 
 func main() {
-	fmt.Println("This is imposter")
+	user, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Hello %s! This is Imposter your Friendly Neighbourhood programming language!\n",user.Username)
+	fmt.Printf("Feel free to type in commands\n")
+	repl.Start(os.Stdin, os.Stdout)
+
 }
