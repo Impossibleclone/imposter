@@ -8,3 +8,9 @@ Say hi! to Pengi.
 
 - Lexing at a checkpoint
 - Now Parsing in progress
+
+How to run:
+
+```bash
+$ go run main.go
+```
