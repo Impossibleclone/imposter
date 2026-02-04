@@ -9,7 +9,8 @@ Say hi! to Pengi.
 - Lexing at a checkpoint
 - Now Parsing in progress
 
-How to run:
+How to run the REPL:
+it tokenize the input and prints the tokens.
 
 ```bash
 git clone https://github.com/impossibleclone/imposter.git
