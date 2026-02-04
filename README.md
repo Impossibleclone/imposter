@@ -11,7 +11,7 @@ Say hi! to Pengi.
 
 How to run the REPL:
 
-it tokenize the input and prints the tokens.
+it tokenizes the input and prints the tokens.
 
 ```bash
 git clone https://github.com/impossibleclone/imposter.git
