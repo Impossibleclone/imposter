@@ -28,22 +28,6 @@ func (p *Program) TokenLiteral() string {
 	}
 }
 
-type VarStatement struct {
-	Token token.Token //The token for the "var" keyword
-	Name  *Identifier //The identifier for the variable
-	Value Expression //The value of the variable
-}
-
-type FnStatement struct {
-	Token token.Token
-	Name  *Identifier
-	Params []*Identifier
-	Body   any
-}
-
-func (ls *VarStatement) statementNode()       {}
-func (ls *VarStatement) TokenLiteral() string { return ls.Token.Literal }
-
 type Identifier struct {
 	Token token.Token
 	Value string
@@ -51,3 +35,30 @@ type Identifier struct {
 
 func (i *Identifier) expressionNode()      {}
 func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
+
+type VarStatement struct {
+	Token token.Token //The token for the "var" keyword
+	Name  *Identifier //The identifier for the variable
+	Value Expression  //The value of the variable
+}
+
+func (ls *VarStatement) statementNode()       {}
+func (ls *VarStatement) TokenLiteral() string { return ls.Token.Literal }
+
+type ReturnStatement struct {
+	Token       token.Token
+	ReturnValue Expression
+}
+
+func (rs *ReturnStatement) statementNode()       {}
+func (rs *ReturnStatement) TokenLiteral() string { return rs.Token.Literal }
+
+type FnStatement struct {
+	Token  token.Token
+	Name   *Identifier
+	Params []*Identifier
+	Body   any
+}
+
+func (fs *FnStatement) statementNode()       {}
+func (fs *FnStatement) TokenLiteral() string { return fs.Token.Literal }

@@ -52,7 +52,6 @@ func checkParserErrors(t *testing.T, p *Parser) {
 	t.FailNow()
 }
 
-
 func testVarStatement(t *testing.T, s ast.Statement, name string) bool {
 	if s.TokenLiteral() != "var" {
 		t.Errorf("s.TokenLiteral not 'var', got=%q", s.TokenLiteral())
@@ -72,4 +71,57 @@ func testVarStatement(t *testing.T, s ast.Statement, name string) bool {
 		return false
 	}
 	return true
+}
+
+func TestReturnStatements(t *testing.T) {
+	input := `
+return 5;
+return 10;
+return 993322;
+`
+	l := lexer.New(input)
+	p := New(l)
+
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+	if len(program.Statements) != 3 {
+		t.Fatalf("program.Statements does not contain 3 statemnts. got =%d",
+			len(program.Statements))
+	}
+
+	for _, stmt := range program.Statements {
+		returnStmt, ok := stmt.(*ast.ReturnStatement)
+		if !ok {
+			t.Errorf("stmt not *ast.ReturnStatement. got=%T", stmt)
+			continue
+		}
+		if returnStmt.TokenLiteral() != "return" {
+			t.Errorf("returnStmt.TokenLiteral not 'return', got %q",
+				returnStmt.TokenLiteral())
+		}
+	}
+}
+
+func TestFunctionStatements(t *testing.T) {
+	input := `
+fn foo(x, y) {
+};
+`
+	l := lexer.New(input)
+	p := New(l)
+
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	for _, stmt := range program.Statements {
+		fnStmt, ok := stmt.(*ast.FnStatement)
+		if !ok {
+			t.Errorf("stmt not *ast.FnStatement. got=%T", stmt)
+			continue
+		}
+		if fnStmt.TokenLiteral() != "fn" {
+			t.Errorf("FnStatement.TokenLiteral not 'fn', got %q",
+				fnStmt.TokenLiteral())
+		}
+	}
 }
