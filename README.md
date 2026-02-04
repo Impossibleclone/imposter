@@ -10,6 +10,7 @@ Say hi! to Pengi.
 - Now Parsing in progress
 
 How to run the REPL:
+
 it tokenize the input and prints the tokens.
 
 ```bash
