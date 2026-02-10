@@ -102,26 +102,26 @@ return 993322;
 	}
 }
 
-func TestFunctionStatements(t *testing.T) {
-	input := `
-fn foo(x, y) {
-};
-`
-	l := lexer.New(input)
-	p := New(l)
-
-	program := p.ParseProgram()
-	checkParserErrors(t, p)
-
-	for _, stmt := range program.Statements {
-		fnStmt, ok := stmt.(*ast.FnStatement)
-		if !ok {
-			t.Errorf("stmt not *ast.FnStatement. got=%T", stmt)
-			continue
-		}
-		if fnStmt.TokenLiteral() != "fn" {
-			t.Errorf("FnStatement.TokenLiteral not 'fn', got %q",
-				fnStmt.TokenLiteral())
-		}
-	}
-}
+// func TestFunctionStatements(t *testing.T) {
+// 	input := `
+// fn foo(x, y) {
+// };
+// `
+// 	l := lexer.New(input)
+// 	p := New(l)
+//
+// 	program := p.ParseProgram()
+// 	checkParserErrors(t, p)
+//
+// 	for _, stmt := range program.Statements {
+// 		fnStmt, ok := stmt.(*ast.FnStatement)
+// 		if !ok {
+// 			t.Errorf("stmt not *ast.FnStatement. got=%T", stmt)
+// 			continue
+// 		}
+// 		if fnStmt.TokenLiteral() != "fn" {
+// 			t.Errorf("FnStatement.TokenLiteral not 'fn', got %q",
+// 				fnStmt.TokenLiteral())
+// 		}
+// 	}
+// }

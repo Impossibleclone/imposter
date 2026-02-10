@@ -94,15 +94,15 @@ func (rs *ReturnStatement) String() string {
 	return out.String()
 }
 
-type FnStatement struct {
-	Token  token.Token
-	Name   *Identifier
-	Params []*Identifier
-	Body   any
-}
-
-func (fs *FnStatement) statementNode()       {}
-func (fs *FnStatement) TokenLiteral() string { return fs.Token.Literal }
+// type FnStatement struct {
+// 	Token  token.Token
+// 	Name   *Identifier
+// 	Params []*Identifier
+// 	Body   any
+// }
+//
+// func (fs *FnStatement) statementNode()       {}
+// func (fs *FnStatement) TokenLiteral() string { return fs.Token.Literal }
 
 type ExpressionStatement struct {
 	Token      token.Token
