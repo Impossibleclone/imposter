@@ -74,7 +74,7 @@ func (vs *VarStatement) String() string {
 }
 
 type ReturnStatement struct {
-	Token       token.Token
+	Token       token.Token // the 'return' token
 	ReturnValue Expression
 }
 
@@ -105,7 +105,7 @@ func (rs *ReturnStatement) String() string {
 // func (fs *FnStatement) TokenLiteral() string { return fs.Token.Literal }
 
 type ExpressionStatement struct {
-	Token      token.Token
+	Token      token.Token // the first token of the expression
 	Expression Expression
 }
 
