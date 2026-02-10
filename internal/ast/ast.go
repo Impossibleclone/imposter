@@ -1,9 +1,14 @@
 package ast
 
-import "github.com/impossibleclone/imposter/internal/token"
+import (
+	"bytes"
+
+	"github.com/impossibleclone/imposter/internal/token"
+)
 
 type Node interface {
 	TokenLiteral() string
+	String() string
 }
 
 type Statement interface {
@@ -28,6 +33,15 @@ func (p *Program) TokenLiteral() string {
 	}
 }
 
+func (p *Program) String() string {
+	var out bytes.Buffer
+
+	for _, s := range p.Statements {
+		out.WriteString(s.String())
+	}
+	return out.String()
+}
+
 type Identifier struct {
 	Token token.Token
 	Value string
@@ -35,6 +49,7 @@ type Identifier struct {
 
 func (i *Identifier) expressionNode()      {}
 func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
+func (i *Identifier) String() string { return i.Value }
 
 type VarStatement struct {
 	Token token.Token //The token for the "var" keyword
@@ -42,8 +57,21 @@ type VarStatement struct {
 	Value Expression  //The value of the variable
 }
 
-func (ls *VarStatement) statementNode()       {}
-func (ls *VarStatement) TokenLiteral() string { return ls.Token.Literal }
+func (vs *VarStatement) statementNode()       {}
+func (vs *VarStatement) TokenLiteral() string { return vs.Token.Literal }
+
+func (vs *VarStatement) String() string {
+	var out bytes.Buffer
+	out.WriteString(vs.TokenLiteral())
+	out.WriteString(vs.Name.String())
+	out.WriteString(" = ")
+
+	if vs.Value != nil {
+		out.WriteString(vs.Value.String())
+	}
+	out.WriteString(";")
+	return out.String()
+}
 
 type ReturnStatement struct {
 	Token       token.Token
@@ -52,6 +80,19 @@ type ReturnStatement struct {
 
 func (rs *ReturnStatement) statementNode()       {}
 func (rs *ReturnStatement) TokenLiteral() string { return rs.Token.Literal }
+
+func (rs *ReturnStatement) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(rs.TokenLiteral() + " ")
+
+	if rs.ReturnValue != nil {
+		out.WriteString(rs.ReturnValue.String())
+	}
+	out.WriteString(";")
+
+	return out.String()
+}
 
 type FnStatement struct {
 	Token  token.Token
@@ -62,3 +103,18 @@ type FnStatement struct {
 
 func (fs *FnStatement) statementNode()       {}
 func (fs *FnStatement) TokenLiteral() string { return fs.Token.Literal }
+
+type ExpressionStatement struct {
+	Token      token.Token
+	Expression Expression
+}
+
+func (es *ExpressionStatement) statementNode()       {}
+func (es *ExpressionStatement) TokenLiteral() string { return es.Token.Literal }
+
+func (es *ExpressionStatement) String() string {
+	if es.Expression == nil {
+		return es.Expression.String()
+	}
+	return ""
+}
