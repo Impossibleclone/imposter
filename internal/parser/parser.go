@@ -16,12 +16,23 @@ type Parser struct {
 	peekToken token.Token
 
 	prefixParseFns map[token.TokenType]prefixParseFn
-	infixParseFn map[token.TokenType]infixParseFn
+	infixParseFn   map[token.TokenType]infixParseFn
 }
 
 type (
 	prefixParseFn func() ast.Expression
-	infixParseFn   func(ast.Expression) ast.Expression
+	infixParseFn  func(ast.Expression) ast.Expression
+)
+
+const (
+	_ int = iota
+	LOWEST
+	EQUALS      // ==
+	LESSGREATER // < or >
+	SUM         // +
+	PRODUCT     // *
+	PREFIX      // !x or -x
+	CALL        // ()
 )
 
 func New(l *lexer.Lexer) *Parser {
@@ -31,6 +42,10 @@ func New(l *lexer.Lexer) *Parser {
 	//Read two tokens, so curToken and peekToken are both set
 	p.nextToken()
 	p.nextToken()
+
+	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
+	p.registerPrefix(token.IDENT, p.parseIdentifier)
+
 	return p
 }
 
@@ -69,6 +84,21 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 	}
 }
 
+// parseStatement parses a statement
+// A statement is either a var statement or a function statement
+func (p *Parser) parseStatement() ast.Statement {
+	switch p.curToken.Type {
+	case token.VAR:
+		return p.parseVarStatement()
+	case token.RETURN:
+		return p.parseReturnStatement()
+		// case token.FUNCTION:
+		// 	return p.parseFunctionStatement()
+	default:
+		return p.parseExpressionStatement()
+	}
+}
+
 func (p *Parser) ParseProgram() *ast.Program {
 	program := &ast.Program{}
 	program.Statements = []ast.Statement{}
@@ -83,19 +113,8 @@ func (p *Parser) ParseProgram() *ast.Program {
 	return program
 }
 
-// parseStatement parses a statement
-// A statement is either a var statement or a function statement
-func (p *Parser) parseStatement() ast.Statement {
-	switch p.curToken.Type {
-	case token.VAR:
-		return p.parseVarStatement()
-	case token.RETURN:
-		return p.parseReturnStatement()
-	// case token.FUNCTION:
-	// 	return p.parseFunctionStatement()
-	default:
-		return nil
-	}
+func (p *Parser) parseIdentifier() ast.Expression {
+	return &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 }
 
 // parseVarStatement parses a var statement
@@ -184,10 +203,32 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 // 	return identifiers
 // }
 
+func (p *Parser) parseExpression(precedence int) ast.Expression {
+	prefix := p.prefixParseFns[p.curToken.Type]
+	if prefix == nil {
+		return nil
+	}
+	leftExp := prefix()
+
+	return leftExp
+}
+
+func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
+	stmt := &ast.ExpressionStatement{Token: p.curToken}
+
+	stmt.Expression = p.parseExpression(LOWEST)
+
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
+
+	return stmt
+}
+
 func (p *Parser) registerPrefix(tokentype token.TokenType, fn prefixParseFn) {
 	p.prefixParseFns[tokentype] = fn
 }
 
-func (p*Parser) registerInfix(tokentype token.TokenType, fn infixParseFn) {
+func (p *Parser) registerInfix(tokentype token.TokenType, fn infixParseFn) {
 	p.infixParseFn[tokentype] = fn
 }
