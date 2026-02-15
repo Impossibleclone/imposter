@@ -16,14 +16,23 @@ type Statement interface {
 	statementNode()
 }
 
+type Program struct {
+	Statements []Statement
+}
+
 type Expression interface {
 	Node
 	expressionNode()
 }
 
-type Program struct {
-	Statements []Statement
+type IntegerLiteral struct {
+	Token token.Token
+	Value int64
 }
+
+func (il *IntegerLiteral) expressionNode()      {}
+func (il *IntegerLiteral) TokenLiteral() string { return il.Token.Literal }
+func (il *IntegerLiteral) String() string       { return il.Token.Literal }
 
 func (p *Program) TokenLiteral() string {
 	if len(p.Statements) > 0 {
@@ -49,7 +58,7 @@ type Identifier struct {
 
 func (i *Identifier) expressionNode()      {}
 func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
-func (i *Identifier) String() string { return i.Value }
+func (i *Identifier) String() string       { return i.Value }
 
 type VarStatement struct {
 	Token token.Token //The token for the "var" keyword
